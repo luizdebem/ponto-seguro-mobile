@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ponto_seguro/screens/Signup/SignupScreen.dart';
 
-class LoginScreen extends StatelessWidget {
-  static final routeName = '/login';
+class SignupScreen extends StatelessWidget {
+  static final routeName = '/signup';
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -60,33 +59,11 @@ class LoginScreen extends StatelessWidget {
                     child: RaisedButton(
                       textColor: Colors.white,
                       color: Colors.blue,
-                      child: Text('Login'),
+                      child: Text('Cadastrar'),
                       onPressed: () {
                         print(emailController.text);
                         print(passwordController.text);
                       },
-                    ),
-                  ),
-                  SizedBox(
-                    height: 22,
-                  ),
-                  Container(
-                    child: Row(
-                      children: <Widget>[
-                        Text('Não tens uma conta ainda?'),
-                        FlatButton(
-                          textColor: Colors.blue,
-                          child: Text(
-                            'Cadastre-se',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            SignupScreen.routeName,
-                          ),
-                        )
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.center,
                     ),
                   ),
                 ],

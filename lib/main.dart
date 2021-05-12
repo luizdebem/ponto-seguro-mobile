@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ponto_seguro/screens/Map/MapScreen.dart';
+import 'package:ponto_seguro/screens/Signup/SignupScreen.dart';
 
 import 'screens/Login/LoginScreen.dart';
 
@@ -26,6 +27,10 @@ class MyApp extends StatelessWidget {
               drawer: Drawer(),
               body: MapScreen(),
             ),
+      routes: {
+        LoginScreen.routeName: (context) => LoginScreen(),
+        SignupScreen.routeName: (context) => SignupScreen()
+      },
     );
   }
 }
