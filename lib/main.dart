@@ -16,20 +16,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: true
-          ? LoginScreen()
-          : Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  'Ponto Seguro',
-                ),
-              ),
-              drawer: Drawer(),
-              body: MapScreen(),
-            ),
+      home: LoginScreen(),
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
-        SignupScreen.routeName: (context) => SignupScreen()
+        SignupScreen.routeName: (context) => SignupScreen(),
+        MapScreen.routeName: (context) => MapScreen(),
       },
     );
   }

@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:ponto_seguro/models/User.dart';
+import 'package:ponto_seguro/screens/Map/MapScreen.dart';
 
 class SignupScreen extends StatelessWidget {
   static final routeName = '/signup';
 
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -25,6 +31,17 @@ class SignupScreen extends StatelessWidget {
                         color: Colors.blue,
                         fontWeight: FontWeight.w500,
                         fontSize: 30,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: TextField(
+                      controller: nameController,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Nome completo',
                       ),
                     ),
                   ),
@@ -60,9 +77,32 @@ class SignupScreen extends StatelessWidget {
                       textColor: Colors.white,
                       color: Colors.blue,
                       child: Text('Cadastrar'),
-                      onPressed: () {
-                        print(emailController.text);
-                        print(passwordController.text);
+                      onPressed: () async {
+                        User user = new User(
+                          fullName: '${nameController.text}',
+                          email: '${emailController.text}',
+                          password: '${passwordController.text}',
+                          isAdmin: false,
+                        );
+                        final url = Uri.https(
+                          '47240485522c.ngrok.io',
+                          '/users/signup',
+                        );
+                        final res = await http.post(
+                          url,
+                          headers: {'Content-Type': 'application/json'},
+                          body: jsonEncode(
+                            user.toJson(),
+                          ),
+                        );
+                        if (res.statusCode == 200) {
+                          return Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            MapScreen.routeName,
+                            (route) => false,
+                          );
+                        }
+                        // @TODO @luizdebem validação e tratamento de erros
                       },
                     ),
                   ),

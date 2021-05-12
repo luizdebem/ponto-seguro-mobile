@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:ponto_seguro/screens/Map/MapScreen.dart';
 import 'package:ponto_seguro/screens/Signup/SignupScreen.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   static final routeName = '/login';
@@ -61,9 +65,28 @@ class LoginScreen extends StatelessWidget {
                       textColor: Colors.white,
                       color: Colors.blue,
                       child: Text('Login'),
-                      onPressed: () {
-                        print(emailController.text);
-                        print(passwordController.text);
+                      onPressed: () async {
+                        final Map data = {
+                          'email': emailController.text,
+                          'password': passwordController.text
+                        };
+                        final url = Uri.https(
+                          '47240485522c.ngrok.io',
+                          '/users/login',
+                        );
+                        final res = await http.post(
+                          url,
+                          headers: {'Content-Type': 'application/json'},
+                          body: jsonEncode(data),
+                        );
+                        if (res.statusCode == 200) {
+                          return Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            MapScreen.routeName,
+                            (route) => false,
+                          );
+                        }
+                        // @TODO @luizdebem validação e tratamento de erros
                       },
                     ),
                   ),
