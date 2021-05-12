@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ponto_seguro/screens/Map/MapScreen.dart';
 
+import 'screens/Login/LoginScreen.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -13,15 +15,17 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Ponto Seguro',
-          ),
-        ),
-        drawer: Drawer(),
-        body: MapScreen(),
-      ),
+      home: true
+          ? LoginScreen()
+          : Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  'Ponto Seguro',
+                ),
+              ),
+              drawer: Drawer(),
+              body: MapScreen(),
+            ),
     );
   }
 }
