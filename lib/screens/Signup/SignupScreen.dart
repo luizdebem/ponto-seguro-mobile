@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ponto_seguro/models/User.dart';
 import 'package:ponto_seguro/screens/Map/MapScreen.dart';
+import 'package:ponto_seguro/services/AuthService.dart';
 
 class SignupScreen extends StatelessWidget {
   static final routeName = '/signup';
@@ -84,17 +85,9 @@ class SignupScreen extends StatelessWidget {
                           password: '${passwordController.text}',
                           isAdmin: false,
                         );
-                        final url = Uri.https(
-                          '47240485522c.ngrok.io',
-                          '/users/signup',
-                        );
-                        final res = await http.post(
-                          url,
-                          headers: {'Content-Type': 'application/json'},
-                          body: jsonEncode(
-                            user.toJson(),
-                          ),
-                        );
+
+                        final res = await AuthService.signup(user);
+
                         if (res.statusCode == 200) {
                           return Navigator.pushNamedAndRemoveUntil(
                             context,
