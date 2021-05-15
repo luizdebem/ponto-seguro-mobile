@@ -17,6 +17,11 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   List reports = [];
 
+  initState() {
+    super.initState();
+    getReports();
+  }
+
   getReports() async {
     final Response res = await ReportService.listAll();
     final data = jsonDecode(res.body);
@@ -31,7 +36,7 @@ class _MapScreenState extends State<MapScreen> {
           (report) => Marker(
             builder: (ctx) => GestureDetector(
               onTap: () {
-                print('pin!');
+                showDetailsModal(report['details']);
               },
               child: Icon(
                 Icons.place,
@@ -51,9 +56,22 @@ class _MapScreenState extends State<MapScreen> {
     return markers;
   }
 
-  initState() {
-    super.initState();
-    getReports();
+  Future<void> showDetailsModal(String details) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Ocorrência'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Detalhes: $details'),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // @TODO @luizdebem componente
