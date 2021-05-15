@@ -75,6 +75,8 @@ class LoginScreen extends StatelessWidget {
                         final res = await AuthService.login(data);
 
                         if (res.statusCode == 200) {
+                          final data = jsonDecode(res.body);
+                          AuthService.TOKEN = data['data']['token'];
                           return Navigator.pushNamedAndRemoveUntil(
                             context,
                             MapScreen.routeName,
