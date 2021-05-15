@@ -5,6 +5,7 @@ import 'package:ponto_seguro/screens/Map/MapScreen.dart';
 import 'package:ponto_seguro/screens/Signup/SignupScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:ponto_seguro/services/AuthService.dart';
+import 'package:toast/toast.dart';
 
 class LoginScreen extends StatelessWidget {
   static final routeName = '/login';
@@ -83,7 +84,26 @@ class LoginScreen extends StatelessWidget {
                             (route) => false,
                           );
                         }
-                        // @TODO @luizdebem validação e tratamento de erros
+
+                        if (res.statusCode == 400) {
+                          return Toast.show(
+                            "Credenciais inválidas, tente novamente",
+                            context,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                          );
+                        }
+
+                        return Toast.show(
+                          "Ocorreu um erro ao comunicar com o servidor.",
+                          context,
+                          duration: Toast.LENGTH_LONG,
+                          gravity: Toast.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
                       },
                     ),
                   ),

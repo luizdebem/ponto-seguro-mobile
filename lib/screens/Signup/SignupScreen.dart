@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:ponto_seguro/models/User.dart';
 import 'package:ponto_seguro/screens/Map/MapScreen.dart';
 import 'package:ponto_seguro/services/AuthService.dart';
+import 'package:toast/toast.dart';
 
 class SignupScreen extends StatelessWidget {
   static final routeName = '/signup';
@@ -95,7 +96,26 @@ class SignupScreen extends StatelessWidget {
                             (route) => false,
                           );
                         }
-                        // @TODO @luizdebem validação e tratamento de erros
+
+                        if (res.statusCode == 400) {
+                          return Toast.show(
+                            "Um usuário já existe com este e-mail.",
+                            context,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                          );
+                        }
+
+                        return Toast.show(
+                          "Ocorreu um erro ao comunicar com o servidor.",
+                          context,
+                          duration: Toast.LENGTH_LONG,
+                          gravity: Toast.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                        );
                       },
                     ),
                   ),
