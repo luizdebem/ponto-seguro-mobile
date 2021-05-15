@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import "package:latlong/latlong.dart" as l;
 import 'package:ponto_seguro/components/SideMenu.dart';
 import 'package:ponto_seguro/services/ReportService.dart';
+import 'package:toast/toast.dart';
 
 class MapScreen extends StatefulWidget {
   static final routeName = '/map';
@@ -104,6 +105,20 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          getReports();
+          return Toast.show(
+            "Mapa atualizado com sucesso.",
+            context,
+            duration: Toast.LENGTH_LONG,
+            gravity: Toast.CENTER,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+        },
+        child: Icon(Icons.refresh),
+      ),
       appBar: AppBar(
         title: Text(
           'Ponto Seguro',
