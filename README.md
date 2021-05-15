@@ -1,16 +1,16 @@
-# ponto_seguro
+# Desafio Tech in Community
 
-A new Flutter project.
+Equipe Ponto Seguro: Luiz Guilherme de Bem, Johatan Tavares
 
-## Getting Started
+# Ponto Seguro Mobile
 
-This project is a starting point for a Flutter application.
+Aplicativo mobile para visualizar e cadastrar ocorrências (assaltos, furtos, violência) no mapa da cidade de Florianópolis, além de visualizar estabelecimentos e locais seguros que possuem boa iluminação e movimento. Lembrando que o gerenciamento desta aplicação é feito através de um web-app, feito para os administradores do sistema (equipe da Ponto Seguro).
 
-A few resources to get you started if this is your first Flutter project:
+## Como rodar o app?
+Requisitos: ter instalado e configurado o Flutter, além do Android Studio ou Xcode.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Primeiro passo: clonar este repositório\
+Segundo passo: executar o comando `flutter pub get`\
+Terceiro passo: com um emulador ou dispositivo conectado, executar o comando `flutter run`\
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Para conseguir acesso às variáveis de ambiente (para conexão com banco, etc), entrar em contato em luizdebem99@gmail.com
