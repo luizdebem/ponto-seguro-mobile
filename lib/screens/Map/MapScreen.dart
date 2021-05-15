@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import "package:latlong/latlong.dart" as l;
+import 'package:ponto_seguro/components/SideMenu.dart';
 
 class MapScreen extends StatelessWidget {
   static final routeName = '/map';
@@ -13,7 +14,7 @@ class MapScreen extends StatelessWidget {
           'Ponto Seguro',
         ),
       ),
-      drawer: Drawer(),
+      drawer: SideMenu(),
       body: FlutterMap(
         options: MapOptions(
           center: l.LatLng(-27.557417, -48.512880),

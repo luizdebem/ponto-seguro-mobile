@@ -32,4 +32,8 @@ class AuthService {
       body: jsonEncode(user.toJson()),
     );
   }
+
+  static void logout() {
+    TOKEN = "";
+  }
 }
