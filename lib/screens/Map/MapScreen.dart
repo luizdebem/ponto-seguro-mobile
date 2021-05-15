@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart';
 import "package:latlong/latlong.dart" as l;
@@ -75,25 +76,83 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  final _formKey = GlobalKey<FormBuilderState>();
+
   // @TODO @luizdebem componente
-  Future<void> _showMyDialog() async {
+  Future<void> _showMyDialog(l.LatLng geolocation) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Adicionar ocorrência aqui'),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Formulário adicionar ocorrência'),
-              ],
+            child: FormBuilder(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                children: [
+                  FormBuilderTextField(
+                    name: 'details',
+                    keyboardType: TextInputType.multiline,
+                    validator: FormBuilderValidators.compose(
+                      [
+                        FormBuilderValidators.required(context),
+                        FormBuilderValidators.minLength(context, 15),
+                      ],
+                    ),
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Insira mais detalhes',
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: Text('CANCELAR'),
               onPressed: () {
                 Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('SALVAR'),
+              onPressed: () async {
+                _formKey.currentState.save();
+                if (_formKey.currentState.validate()) {
+                  final data = {
+                    "geolocation": {
+                      "latitude": geolocation.latitude,
+                      "longitude": geolocation.longitude,
+                    },
+                    "details": _formKey.currentState.value['details'],
+                    "userID": "25910" // @TODO @luizdebem userID no service
+                  };
+                  final res = await ReportService.create(data);
+                  if (res.statusCode == 200) {
+                    getReports();
+                    Navigator.of(context).pop();
+                    return Toast.show(
+                      "Ocorrência salva com sucesso.",
+                      context,
+                      duration: Toast.LENGTH_LONG,
+                      gravity: Toast.BOTTOM,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                    );
+                  }
+                } else {
+                  return Toast.show(
+                    "Verifique os dados do formulário!",
+                    context,
+                    duration: Toast.LENGTH_LONG,
+                    gravity: Toast.BOTTOM,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                  );
+                }
               },
             ),
           ],
@@ -129,9 +188,8 @@ class _MapScreenState extends State<MapScreen> {
         options: MapOptions(
           center: l.LatLng(-27.557417, -48.512880),
           zoom: 13.0,
-          onTap: (l.LatLng s) {
-            _showMyDialog();
-            print(s);
+          onTap: (l.LatLng geolocation) {
+            _showMyDialog(geolocation);
           },
         ),
         layers: [
