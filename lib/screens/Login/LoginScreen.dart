@@ -117,6 +117,9 @@ class LoginScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6.0),
+                            ),
                             elevation: 12,
                             minWidth: double.infinity,
                             textColor: Colors.white,
