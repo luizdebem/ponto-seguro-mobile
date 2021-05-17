@@ -20,151 +20,212 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: SingleChildScrollView(
-              child: FormBuilder(
-                key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Ponto Seguro',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 30,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: FormBuilderTextField(
-                        name: 'email',
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: FormBuilderValidators.compose(
-                          [
-                            FormBuilderValidators.required(context),
-                            FormBuilderValidators.email(context),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                  child: FormBuilder(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: Column(
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "Bem vindo ao Ponto Seguro",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            Text(
+                              "Mais segurança no dia-a-dia na palma da sua mão",
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Email',
+                        SizedBox(
+                          height: 50,
                         ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                      child: FormBuilderTextField(
-                        name: 'password',
-                        obscureText: true,
-                        controller: passwordController,
-                        validator: FormBuilderValidators.compose(
-                          [
-                            FormBuilderValidators.required(context),
-                            FormBuilderValidators.minLength(context, 8),
-                          ],
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          child: FormBuilderTextField(
+                            style: TextStyle(fontSize: 10),
+                            name: 'email',
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.required(context),
+                                FormBuilderValidators.email(context),
+                              ],
+                            ),
+                            decoration: InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.check,
+                                size: 15,
+                                color: Colors.grey,
+                              ),
+                              border: OutlineInputBorder(),
+                              labelText: 'E-mail',
+                              labelStyle: TextStyle(fontSize: 10),
+                              errorStyle: TextStyle(fontSize: 10),
+                              isDense: true,
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            ),
+                          ),
                         ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Senha',
+                        Container(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                          child: FormBuilderTextField(
+                            style: TextStyle(fontSize: 10),
+                            name: 'password',
+                            obscureText: true,
+                            controller: passwordController,
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.required(context),
+                                FormBuilderValidators.minLength(context, 8),
+                              ],
+                            ),
+                            decoration: InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.visibility_off,
+                                size: 15,
+                                color: Colors.grey,
+                              ),
+                              border: OutlineInputBorder(),
+                              labelText: 'Senha',
+                              labelStyle: TextStyle(fontSize: 10),
+                              errorStyle: TextStyle(fontSize: 10),
+                              isDense: true,
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 22,
-                    ),
-                    Container(
-                      height: 50,
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: RaisedButton(
-                        textColor: Colors.white,
-                        color: Colors.blue,
-                        child: Text('Login'),
-                        onPressed: () async {
-                          _formKey.currentState.save();
-                          if (_formKey.currentState.validate()) {
-                            final Map data = {
-                              'email': emailController.text,
-                              'password': passwordController.text
-                            };
-
-                            final res = await AuthService.login(data);
-
-                            if (res.statusCode == 200) {
-                              final data = jsonDecode(res.body);
-                              AuthService.TOKEN = data['data']['token'];
-                              return Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                MapScreen.routeName,
-                                (route) => false,
-                              );
-                            }
-
-                            if (res.statusCode == 400) {
-                              return Toast.show(
-                                "Credenciais inválidas, tente novamente",
-                                context,
-                                duration: Toast.LENGTH_LONG,
-                                gravity: Toast.BOTTOM,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                              );
-                            }
-
-                            return Toast.show(
-                              "Ocorreu um erro ao comunicar com o servidor.",
-                              context,
-                              duration: Toast.LENGTH_LONG,
-                              gravity: Toast.BOTTOM,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                            );
-                          } else {
-                            return Toast.show(
-                              "Verifique os dados do formulário!",
-                              context,
-                              duration: Toast.LENGTH_LONG,
-                              gravity: Toast.BOTTOM,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 22,
-                    ),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Text('Não tens uma conta ainda?'),
-                          FlatButton(
-                            textColor: Colors.blue,
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: MaterialButton(
+                            elevation: 12,
+                            minWidth: double.infinity,
+                            textColor: Colors.white,
+                            color: Color.fromRGBO(0, 150, 199, 1),
                             child: Text(
-                              'Cadastre-se',
-                              style: TextStyle(fontSize: 20),
+                              'Entrar',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
                             ),
-                            onPressed: () => Navigator.pushNamed(
-                              context,
-                              SignupScreen.routeName,
-                            ),
-                          )
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.center,
-                      ),
+                            onPressed: () async {
+                              _formKey.currentState.save();
+                              if (_formKey.currentState.validate()) {
+                                final Map data = {
+                                  'email': emailController.text,
+                                  'password': passwordController.text
+                                };
+
+                                final res = await AuthService.login(data);
+
+                                if (res.statusCode == 200) {
+                                  final data = jsonDecode(res.body);
+                                  AuthService.TOKEN = data['data']['token'];
+                                  return Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    MapScreen.routeName,
+                                    (route) => false,
+                                  );
+                                }
+
+                                if (res.statusCode == 400) {
+                                  return Toast.show(
+                                    "Credenciais inválidas, tente novamente",
+                                    context,
+                                    duration: Toast.LENGTH_LONG,
+                                    gravity: Toast.BOTTOM,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                  );
+                                }
+
+                                return Toast.show(
+                                  "Ocorreu um erro ao comunicar com o servidor.",
+                                  context,
+                                  duration: Toast.LENGTH_LONG,
+                                  gravity: Toast.BOTTOM,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                );
+                              } else {
+                                return Toast.show(
+                                  "Verifique os dados do formulário!",
+                                  context,
+                                  duration: Toast.LENGTH_LONG,
+                                  gravity: Toast.BOTTOM,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        Text(
+                          "Esqueceu sua senha?",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(0, 119, 182, 1),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 22,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: FlatButton(
+                  padding: EdgeInsets.zero,
+                  textColor: Colors.blue,
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Não tem uma conta? ',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color.fromRGBO(0, 119, 182, 1),
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Crie agora',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(0, 119, 182, 1),
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    SignupScreen.routeName,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
