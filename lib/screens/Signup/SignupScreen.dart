@@ -191,6 +191,8 @@ class SignupScreen extends StatelessWidget {
                                 if (res.statusCode == 200) {
                                   final data = jsonDecode(res.body);
                                   AuthService.TOKEN = data['data']['token'];
+                                  AuthService.USER_ID =
+                                      data['data']['user']['_id'];
                                   return Navigator.pushNamedAndRemoveUntil(
                                     context,
                                     MapScreen.routeName,

@@ -7,6 +7,7 @@ import 'package:ponto_seguro/models/User.dart';
 // @TODO @luizdebem refac, dá pra reutilizar bastante coisa
 class AuthService {
   static String TOKEN = "";
+  static String USER_ID = "";
 
   static Future login(Map data) {
     final url = Uri.http(

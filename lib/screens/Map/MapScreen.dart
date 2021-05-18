@@ -6,6 +6,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart';
 import "package:latlong/latlong.dart" as l;
 import 'package:ponto_seguro/components/SideMenu.dart';
+import 'package:ponto_seguro/services/AuthService.dart';
 import 'package:ponto_seguro/services/ReportService.dart';
 import 'package:toast/toast.dart';
 
@@ -97,7 +98,11 @@ class _MapScreenState extends State<MapScreen> {
                     validator: FormBuilderValidators.compose(
                       [
                         FormBuilderValidators.required(context),
-                        FormBuilderValidators.minLength(context, 15),
+                        FormBuilderValidators.minLength(
+                          context,
+                          15,
+                          errorText: 'Insira pelo menos 15 caracteres',
+                        ),
                       ],
                     ),
                     maxLines: null,
@@ -105,7 +110,7 @@ class _MapScreenState extends State<MapScreen> {
                       border: OutlineInputBorder(),
                       labelText: 'Insira mais detalhes',
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -128,7 +133,7 @@ class _MapScreenState extends State<MapScreen> {
                       "longitude": geolocation.longitude,
                     },
                     "details": _formKey.currentState.value['details'],
-                    "userID": "25910" // @TODO @luizdebem userID no service
+                    "userID": AuthService.USER_ID
                   };
                   final res = await ReportService.create(data);
                   if (res.statusCode == 200) {
