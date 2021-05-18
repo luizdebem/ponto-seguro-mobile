@@ -190,6 +190,7 @@ class LoginScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             color: Color.fromRGBO(0, 119, 182, 1),
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         SizedBox(
@@ -210,7 +211,8 @@ class LoginScreen extends StatelessWidget {
                       text: 'Não tem uma conta? ',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Color.fromRGBO(0, 119, 182, 1),
+                        color: Color.fromRGBO(19, 19, 19, 1),
+                        fontWeight: FontWeight.w500,
                       ),
                       children: [
                         TextSpan(
@@ -218,6 +220,7 @@ class LoginScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12,
                             color: Color.fromRGBO(0, 119, 182, 1),
+                            fontWeight: FontWeight.w500,
                             decoration: TextDecoration.underline,
                           ),
                         ),
