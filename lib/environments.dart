@@ -1,3 +1,3 @@
 class Environments {
-  static get URI_API => "18.228.204.190:3000";
+  static get URI_API => "52.67.124.207:3000";
 }

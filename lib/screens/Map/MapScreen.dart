@@ -5,7 +5,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart';
 import "package:latlong/latlong.dart" as l;
-import 'package:ponto_seguro/components/SideMenu.dart';
 import 'package:ponto_seguro/services/AuthService.dart';
 import 'package:ponto_seguro/services/ReportService.dart';
 import 'package:toast/toast.dart';
@@ -19,6 +18,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   List reports = [];
+  bool mapLocked = true;
 
   initState() {
     super.initState();
@@ -41,11 +41,7 @@ class _MapScreenState extends State<MapScreen> {
               onTap: () {
                 showDetailsModal(report['details']);
               },
-              child: Icon(
-                Icons.place,
-                color: Colors.red,
-                size: 30,
-              ),
+              child: Image.asset('assets/pin.png'),
             ),
             height: 50,
             width: 50,
@@ -169,32 +165,46 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: IconButton(
+        icon: Image.asset(
+            mapLocked ? 'assets/click-btn-locked.png' : 'assets/click-btn.png'),
+        iconSize: 100,
         onPressed: () {
-          getReports();
-          return Toast.show(
-            "Mapa atualizado com sucesso.",
-            context,
-            duration: Toast.LENGTH_LONG,
-            gravity: Toast.CENTER,
-            backgroundColor: Colors.green,
-            textColor: Colors.white,
-          );
+          setState(() {
+            mapLocked = !mapLocked;
+          });
         },
-        child: Icon(Icons.refresh),
       ),
-      appBar: AppBar(
-        title: Text(
-          'Ponto Seguro',
-        ),
-      ),
-      drawer: SideMenu(),
+      // floatingActionButton: FloatingActionButton(
+      //   // @TODO @luizdebem - alterar o local de atualizar o mapa;
+      //   // onPressed: () {
+      //   //   getReports();
+      //   //   return Toast.show(
+      //   //     "Mapa atualizado com sucesso.",
+      //   //     context,
+      //   //     duration: Toast.LENGTH_LONG,
+      //   //     gravity: Toast.CENTER,
+      //   //     backgroundColor: Colors.green,
+      //   //     textColor: Colors.white,
+      //   //   );
+      //   // },
+      //   onPressed: () {
+      //     setState(() {});
+      //   },
+      //   child: Icon(Icons.add_circle_outline, size: 50),
+      // ),
       body: FlutterMap(
         options: MapOptions(
+          interactiveFlags: InteractiveFlag.pinchZoom |
+              InteractiveFlag.drag |
+              InteractiveFlag.doubleTapZoom |
+              InteractiveFlag.flingAnimation,
           center: l.LatLng(-27.557417, -48.512880),
           zoom: 13.0,
           onTap: (l.LatLng geolocation) {
-            _showMyDialog(geolocation);
+            if (!mapLocked) _showMyDialog(geolocation);
           },
         ),
         layers: [
@@ -205,6 +215,38 @@ class _MapScreenState extends State<MapScreen> {
           MarkerLayerOptions(
             markers: markers(),
           )
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Color.fromRGBO(0, 150, 199, 1),
+        unselectedItemColor: Color.fromRGBO(198, 198, 198, 1),
+        backgroundColor: Color.fromRGBO(252, 252, 252, 1),
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 1,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_outlined),
+            label: 'Alertas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.warning),
+            label: 'Ocorrências',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.add,
+              color: Color.fromRGBO(252, 252, 252, 1),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            label: 'Perfil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            label: 'Opções',
+          ),
         ],
       ),
     );
