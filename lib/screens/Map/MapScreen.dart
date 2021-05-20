@@ -43,8 +43,6 @@ class _MapScreenState extends State<MapScreen> {
               },
               child: Image.asset('assets/pin.png'),
             ),
-            height: 50,
-            width: 50,
             point: l.LatLng(
               report['geolocation']['latitude'],
               report['geolocation']['longitude'],
@@ -81,30 +79,112 @@ class _MapScreenState extends State<MapScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Adicionar ocorrência aqui'),
+          title: Text(
+            'Criar ocorrência',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
           content: SingleChildScrollView(
             child: FormBuilder(
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
+                  FormBuilderRadioGroup(
+                    name: 'userType',
+                    options: [
+                      FormBuilderFieldOption(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Pedestre"),
+                            Icon(Icons.emoji_people_outlined),
+                          ],
+                        ),
+                        value: 'pedestrian',
+                      ),
+                      FormBuilderFieldOption(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Motorista"),
+                            Icon(Icons.drive_eta_outlined),
+                          ],
+                        ),
+                        value: 'driver',
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  FormBuilderDropdown(
+                    name: 'reportType',
+                    decoration: InputDecoration(
+                      labelText: 'Ocorrência',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: [
+                      DropdownMenuItem(
+                        child: Text('test'),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: FormBuilderDropdown(
+                          name: 'date',
+                          decoration: InputDecoration(
+                            labelText: 'DD/MM/AA',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: [
+                            DropdownMenuItem(
+                              child: Text('test'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          width: 1,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 6,
+                        child: FormBuilderDropdown(
+                          name: 'time',
+                          decoration: InputDecoration(
+                            labelText: 'Horário',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: [
+                            DropdownMenuItem(
+                              child: Text('test'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   FormBuilderTextField(
                     name: 'details',
                     keyboardType: TextInputType.multiline,
-                    validator: FormBuilderValidators.compose(
-                      [
-                        FormBuilderValidators.required(context),
-                        FormBuilderValidators.minLength(
-                          context,
-                          15,
-                          errorText: 'Insira pelo menos 15 caracteres',
-                        ),
-                      ],
-                    ),
                     maxLines: null,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Insira mais detalhes',
+                      labelText: 'Detalhes (opcional)',
                     ),
                   ),
                 ],
