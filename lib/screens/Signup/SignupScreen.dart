@@ -67,7 +67,7 @@ class SignupScreen extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.all(10),
                             child: FormBuilderTextField(
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 12),
                               name: 'fullName',
                               controller: nameController,
                               keyboardType: TextInputType.name,
@@ -84,8 +84,8 @@ class SignupScreen extends StatelessWidget {
                                 ),
                                 border: OutlineInputBorder(),
                                 labelText: 'Nome',
-                                labelStyle: TextStyle(fontSize: 10),
-                                errorStyle: TextStyle(fontSize: 10),
+                                labelStyle: TextStyle(fontSize: 12),
+                                errorStyle: TextStyle(fontSize: 12),
                                 isDense: true,
                                 contentPadding:
                                     EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -95,7 +95,7 @@ class SignupScreen extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.all(10),
                             child: FormBuilderTextField(
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 12),
                               name: 'email',
                               controller: emailController,
                               keyboardType: TextInputType.emailAddress,
@@ -115,8 +115,8 @@ class SignupScreen extends StatelessWidget {
                                 ),
                                 border: OutlineInputBorder(),
                                 labelText: 'E-mail',
-                                labelStyle: TextStyle(fontSize: 10),
-                                errorStyle: TextStyle(fontSize: 10),
+                                labelStyle: TextStyle(fontSize: 12),
+                                errorStyle: TextStyle(fontSize: 12),
                                 isDense: true,
                                 contentPadding:
                                     EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -126,7 +126,7 @@ class SignupScreen extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                             child: FormBuilderTextField(
-                              style: TextStyle(fontSize: 10),
+                              style: TextStyle(fontSize: 12),
                               name: 'password',
                               obscureText: true,
                               controller: passwordController,
@@ -146,8 +146,8 @@ class SignupScreen extends StatelessWidget {
                                 ),
                                 border: OutlineInputBorder(),
                                 labelText: 'Senha',
-                                labelStyle: TextStyle(fontSize: 10),
-                                errorStyle: TextStyle(fontSize: 10),
+                                labelStyle: TextStyle(fontSize: 12),
+                                errorStyle: TextStyle(fontSize: 12),
                                 isDense: true,
                                 contentPadding:
                                     EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -168,7 +168,7 @@ class SignupScreen extends StatelessWidget {
                                 title: Text(
                                   "Eu aceito os Termos de Serviço & Políticas de Privacidade",
                                   style: TextStyle(
-                                    fontSize: 10,
+                                    fontSize: 12,
                                   ),
                                 ),
                                 validator: FormBuilderValidators.equal(
