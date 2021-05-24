@@ -276,6 +276,48 @@ class _MapScreenState extends State<MapScreen> {
       //   child: Icon(Icons.add_circle_outline, size: 50),
       // ),
       body: FlutterMap(
+        nonRotatedChildren: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 12,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: FormBuilderTextField(
+                  style: TextStyle(fontSize: 12),
+                  name: 'search',
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: new OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 0,
+                        style: BorderStyle.none,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      size: 25,
+                      color: Colors.grey,
+                    ),
+                    labelText: 'Pesquisar um local',
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                    labelStyle: TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
         options: MapOptions(
           interactiveFlags: InteractiveFlag.pinchZoom |
               InteractiveFlag.drag |
