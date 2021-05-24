@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import "package:latlong/latlong.dart" as l;
 import 'package:ponto_seguro/services/AuthService.dart';
 import 'package:ponto_seguro/services/ReportService.dart';
@@ -39,7 +40,7 @@ class _MapScreenState extends State<MapScreen> {
           (report) => Marker(
             builder: (ctx) => GestureDetector(
               onTap: () {
-                showDetailsModal(report['details']);
+                showDetailsModal(report);
               },
               child: Image.asset('assets/pin.png'),
             ),
@@ -53,16 +54,22 @@ class _MapScreenState extends State<MapScreen> {
     return markers;
   }
 
-  Future<void> showDetailsModal(String details) async {
+  Future<void> showDetailsModal(dynamic report) async {
+    print(jsonEncode(report['when']));
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Ocorrência'),
+          title: Text(
+              'Ocorrência - ${report['userType'] == 'PEDESTRIAN' ? 'Pedestre' : 'Motorista'}'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Detalhes: $details'),
+                Text(
+                  '${DateFormat.yMd().add_jm().format(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(report['when']))}',
+                ),
+                Text('Tipo de ocorrência: ${report['reportType']}'),
+                Text('Detalhes: ${report['details']}'),
               ],
             ),
           ),
