@@ -95,6 +95,9 @@ class _MapScreenState extends State<MapScreen> {
                 children: [
                   FormBuilderRadioGroup(
                     name: 'userType',
+                    validator: FormBuilderValidators.compose(
+                      [FormBuilderValidators.required(context)],
+                    ),
                     options: [
                       FormBuilderFieldOption(
                         child: Row(
@@ -104,7 +107,7 @@ class _MapScreenState extends State<MapScreen> {
                             Icon(Icons.emoji_people_outlined),
                           ],
                         ),
-                        value: 'pedestrian',
+                        value: 'PEDESTRIAN',
                       ),
                       FormBuilderFieldOption(
                         child: Row(
@@ -114,7 +117,7 @@ class _MapScreenState extends State<MapScreen> {
                             Icon(Icons.drive_eta_outlined),
                           ],
                         ),
-                        value: 'driver',
+                        value: 'DRIVER',
                       ),
                     ],
                   ),
@@ -125,55 +128,29 @@ class _MapScreenState extends State<MapScreen> {
                       labelText: 'Ocorrência',
                       border: OutlineInputBorder(),
                     ),
+                    validator: FormBuilderValidators.compose(
+                      [FormBuilderValidators.required(context)],
+                    ),
                     items: [
                       DropdownMenuItem(
-                        child: Text('test'),
+                        child: Text('Furto'),
+                        value: 'THEFT',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('Assalto'),
+                        value: 'ROBBERY',
                       ),
                     ],
                   ),
                   SizedBox(
                     height: 15,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: FormBuilderDropdown(
-                          name: 'date',
-                          decoration: InputDecoration(
-                            labelText: 'DD/MM/AA',
-                            border: OutlineInputBorder(),
-                          ),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text('test'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          width: 1,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 6,
-                        child: FormBuilderDropdown(
-                          name: 'time',
-                          decoration: InputDecoration(
-                            labelText: 'Horário',
-                            border: OutlineInputBorder(),
-                          ),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text('test'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  FormBuilderDateTimePicker(
+                    name: 'when',
+                    decoration: InputDecoration(
+                      labelText: 'Data/hora',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
                   SizedBox(
                     height: 15,
@@ -209,6 +186,11 @@ class _MapScreenState extends State<MapScreen> {
                       "longitude": geolocation.longitude,
                     },
                     "details": _formKey.currentState.value['details'],
+                    "userType": _formKey.currentState.value['userType'],
+                    "reportType": _formKey.currentState.value['reportType'],
+                    "when": _formKey.currentState.value['when'] != null
+                        ? _formKey.currentState.value['when'].toIso8601String()
+                        : null,
                     "userID": AuthService.USER_ID
                   };
                   final res = await ReportService.create(data);
