@@ -106,6 +106,14 @@ class _MapScreenState extends State<MapScreen> {
           ),
         )
         .toList();
+
+    final userMarker = Marker(
+      builder: (ctx) => Image.asset('assets/person-pin.png'),
+      point: l.LatLng(userLatitude, userLongitude),
+    );
+
+    markers.add(userMarker);
+
     return markers;
   }
 
@@ -286,9 +294,103 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
+  MapController _mapController = MapController();
+
+  Widget _initMap(BuildContext context) {
+    return Stack(
+      children: [
+        FlutterMap(
+          mapController: _mapController,
+          nonRotatedChildren: [
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black38,
+                        blurRadius: 12,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: FormBuilderTextField(
+                    style: TextStyle(fontSize: 12),
+                    name: 'search',
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: new OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 0,
+                          style: BorderStyle.none,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        size: 25,
+                        color: Colors.grey,
+                      ),
+                      labelText: 'Pesquisar um local',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelStyle: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          options: MapOptions(
+            interactiveFlags: InteractiveFlag.pinchZoom |
+                InteractiveFlag.drag |
+                InteractiveFlag.doubleTapZoom |
+                InteractiveFlag.flingAnimation,
+            center: l.LatLng(userLatitude, userLongitude),
+            zoom: 14,
+            onTap: (l.LatLng geolocation) {
+              if (!mapLocked) _showMyDialog(geolocation);
+            },
+          ),
+          layers: [
+            TileLayerOptions(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: ['a', 'b', 'c'],
+            ),
+            MarkerLayerOptions(
+              markers: markers(),
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              child: Icon(Icons.my_location),
+              onPressed: () {
+                _mapController.onReady.then((res) {
+                  // @TODO @luizdebem - animation
+                  _mapController.move(
+                    l.LatLng(
+                      userLatitude,
+                      userLongitude,
+                    ),
+                    14,
+                  );
+                });
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('asd');
     return Scaffold(
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
@@ -320,70 +422,7 @@ class _MapScreenState extends State<MapScreen> {
       //   },
       //   child: Icon(Icons.add_circle_outline, size: 50),
       // ),
-      body: FlutterMap(
-        nonRotatedChildren: [
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black38,
-                      blurRadius: 12,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: FormBuilderTextField(
-                  style: TextStyle(fontSize: 12),
-                  name: 'search',
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: new OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 25,
-                      color: Colors.grey,
-                    ),
-                    labelText: 'Pesquisar um local',
-                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                    labelStyle: TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-        options: MapOptions(
-          interactiveFlags: InteractiveFlag.pinchZoom |
-              InteractiveFlag.drag |
-              InteractiveFlag.doubleTapZoom |
-              InteractiveFlag.flingAnimation,
-          center: l.LatLng(userLatitude, userLongitude),
-          zoom: 14,
-          onTap: (l.LatLng geolocation) {
-            if (!mapLocked) _showMyDialog(geolocation);
-          },
-        ),
-        layers: [
-          TileLayerOptions(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: ['a', 'b', 'c'],
-          ),
-          MarkerLayerOptions(
-            markers: markers(),
-          )
-        ],
-      ),
+      body: _initMap(context),
       bottomNavigationBar: BottomNavBar(),
     );
   }
