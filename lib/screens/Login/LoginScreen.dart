@@ -22,7 +22,7 @@ class LoginScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white, // background color
         image: DecorationImage(
-          image: AssetImage('assets/auth-bg.png'),
+          image: AssetImage('assets/auth-bg-2.png'),
           fit: BoxFit.cover,
         ), // background image above color
       ),
@@ -43,8 +43,12 @@ class LoginScreen extends StatelessWidget {
                         children: [
                           Column(
                             children: [
+                              Image.asset('assets/ponto-seguro-banner.png'),
+                              SizedBox(
+                                height: 55,
+                              ),
                               Text(
-                                "Bem vindo ao Ponto Seguro",
+                                "Bem vindo",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,

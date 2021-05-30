@@ -24,7 +24,7 @@ class SignupScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white, // background color
         image: DecorationImage(
-          image: AssetImage('assets/auth-bg.png'),
+          image: AssetImage('assets/auth-bg-2.png'),
           fit: BoxFit.cover,
         ), // background image above color
       ),
@@ -45,6 +45,10 @@ class SignupScreen extends StatelessWidget {
                         children: [
                           Column(
                             children: [
+                              Image.asset('assets/ponto-seguro-banner.png'),
+                              SizedBox(
+                                height: 55,
+                              ),
                               Text(
                                 "Faça parte desta comunidade",
                                 style: TextStyle(
