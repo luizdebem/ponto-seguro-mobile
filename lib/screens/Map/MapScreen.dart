@@ -149,146 +149,199 @@ class _MapScreenState extends State<MapScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-            'Criar ocorrência',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+          contentPadding: EdgeInsets.all(0),
+          content: Container(
+            decoration: BoxDecoration(
+              color: Colors.white, // background color
+              image: DecorationImage(
+                image: AssetImage('assets/auth-bg-2.png'),
+                fit: BoxFit.cover,
+              ), // background image above color
             ),
-            textAlign: TextAlign.center,
-          ),
-          content: SingleChildScrollView(
-            child: FormBuilder(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                children: [
-                  FormBuilderRadioGroup(
-                    name: 'userType',
-                    validator: FormBuilderValidators.compose(
-                      [FormBuilderValidators.required(context)],
-                    ),
-                    options: [
-                      FormBuilderFieldOption(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Pedestre"),
-                            Icon(Icons.emoji_people_outlined),
-                          ],
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SingleChildScrollView(
+                child: FormBuilder(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    children: [
+                      Text(
+                        'Criar ocorrência',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
-                        value: 'PEDESTRIAN',
+                        textAlign: TextAlign.center,
                       ),
-                      FormBuilderFieldOption(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Motorista"),
-                            Icon(Icons.drive_eta_outlined),
-                          ],
+                      FormBuilderRadioGroup(
+                        name: 'userType',
+                        validator: FormBuilderValidators.compose(
+                          [FormBuilderValidators.required(context)],
                         ),
-                        value: 'DRIVER',
+                        options: [
+                          FormBuilderFieldOption(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Pedestre"),
+                                Icon(Icons.emoji_people_outlined),
+                              ],
+                            ),
+                            value: 'PEDESTRIAN',
+                          ),
+                          FormBuilderFieldOption(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Motorista"),
+                                Icon(Icons.drive_eta_outlined),
+                              ],
+                            ),
+                            value: 'DRIVER',
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      FormBuilderDropdown(
+                        name: 'reportType',
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          labelText: 'Ocorrência',
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 12,
+                          ),
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: FormBuilderValidators.compose(
+                          [FormBuilderValidators.required(context)],
+                        ),
+                        items: [
+                          DropdownMenuItem(
+                            child: Text('Furto'),
+                            value: 'THEFT',
+                          ),
+                          DropdownMenuItem(
+                            child: Text('Assalto'),
+                            value: 'ROBBERY',
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      FormBuilderDateTimePicker(
+                        name: 'when',
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 12,
+                          ),
+                          labelText: 'Data/hora',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      FormBuilderTextField(
+                        name: 'details',
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 0,
+                            horizontal: 12,
+                          ),
+                          border: OutlineInputBorder(),
+                          labelText: 'Detalhes (opcional)',
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text(
+                                'Cancelar',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () async {
+                                _formKey.currentState.save();
+                                if (_formKey.currentState.validate()) {
+                                  final data = {
+                                    "geolocation": {
+                                      "latitude": geolocation.latitude,
+                                      "longitude": geolocation.longitude,
+                                    },
+                                    "details":
+                                        _formKey.currentState.value['details'],
+                                    "userType":
+                                        _formKey.currentState.value['userType'],
+                                    "reportType": _formKey
+                                        .currentState.value['reportType'],
+                                    "when": _formKey
+                                                .currentState.value['when'] !=
+                                            null
+                                        ? _formKey.currentState.value['when']
+                                            .toIso8601String()
+                                        : null,
+                                    "userID": AuthService.USER_ID
+                                  };
+                                  final res = await ReportService.create(data);
+                                  if (res.statusCode == 200) {
+                                    getReports();
+                                    Navigator.of(context).pop();
+                                    return Toast.show(
+                                      "Ocorrência salva com sucesso.",
+                                      context,
+                                      duration: Toast.LENGTH_LONG,
+                                      gravity: Toast.BOTTOM,
+                                      backgroundColor: Colors.green,
+                                      textColor: Colors.white,
+                                    );
+                                  }
+                                } else {
+                                  return Toast.show(
+                                    "Verifique os dados do formulário!",
+                                    context,
+                                    duration: Toast.LENGTH_LONG,
+                                    gravity: Toast.BOTTOM,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                  );
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6.0),
+                              ),
+                              color: Color.fromRGBO(0, 150, 199, 1),
+                              child: Text(
+                                'Criar',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 15),
-                  FormBuilderDropdown(
-                    name: 'reportType',
-                    decoration: InputDecoration(
-                      labelText: 'Ocorrência',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: FormBuilderValidators.compose(
-                      [FormBuilderValidators.required(context)],
-                    ),
-                    items: [
-                      DropdownMenuItem(
-                        child: Text('Furto'),
-                        value: 'THEFT',
-                      ),
-                      DropdownMenuItem(
-                        child: Text('Assalto'),
-                        value: 'ROBBERY',
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  FormBuilderDateTimePicker(
-                    name: 'when',
-                    decoration: InputDecoration(
-                      labelText: 'Data/hora',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  FormBuilderTextField(
-                    name: 'details',
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Detalhes (opcional)',
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('CANCELAR'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('SALVAR'),
-              onPressed: () async {
-                _formKey.currentState.save();
-                if (_formKey.currentState.validate()) {
-                  final data = {
-                    "geolocation": {
-                      "latitude": geolocation.latitude,
-                      "longitude": geolocation.longitude,
-                    },
-                    "details": _formKey.currentState.value['details'],
-                    "userType": _formKey.currentState.value['userType'],
-                    "reportType": _formKey.currentState.value['reportType'],
-                    "when": _formKey.currentState.value['when'] != null
-                        ? _formKey.currentState.value['when'].toIso8601String()
-                        : null,
-                    "userID": AuthService.USER_ID
-                  };
-                  final res = await ReportService.create(data);
-                  if (res.statusCode == 200) {
-                    getReports();
-                    Navigator.of(context).pop();
-                    return Toast.show(
-                      "Ocorrência salva com sucesso.",
-                      context,
-                      duration: Toast.LENGTH_LONG,
-                      gravity: Toast.BOTTOM,
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                    );
-                  }
-                } else {
-                  return Toast.show(
-                    "Verifique os dados do formulário!",
-                    context,
-                    duration: Toast.LENGTH_LONG,
-                    gravity: Toast.BOTTOM,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                  );
-                }
-              },
-            ),
-          ],
         );
       },
     );
