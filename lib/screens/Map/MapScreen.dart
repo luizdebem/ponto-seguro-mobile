@@ -588,7 +588,7 @@ class _MapScreenState extends State<MapScreen> {
           FloatingActionButtonLocation.miniCenterDocked,
       floatingActionButton: IconButton(
         icon: Image.asset(
-            mapLocked ? 'assets/click-btn-locked.png' : 'assets/click-btn.png'),
+            mapLocked ? 'assets/click-btn.png' : 'assets/click-btn-locked.png'),
         iconSize: 100,
         onPressed: () {
           setState(() {

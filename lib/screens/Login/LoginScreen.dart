@@ -218,38 +218,40 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: FlatButton(
-                    padding: EdgeInsets.zero,
-                    textColor: Colors.blue,
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Não tem uma conta? ',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Color.fromRGBO(19, 19, 19, 1),
-                          fontWeight: FontWeight.w500,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: 'Crie agora',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Color.fromRGBO(0, 119, 182, 1),
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
+                MediaQuery.of(context).viewInsets.bottom == 0
+                    ? Align(
+                        alignment: Alignment.bottomCenter,
+                        child: FlatButton(
+                          padding: EdgeInsets.zero,
+                          textColor: Colors.blue,
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Não tem uma conta? ',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(19, 19, 19, 1),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'Crie agora',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromRGBO(0, 119, 182, 1),
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    onPressed: () => Navigator.pushNamed(
-                      context,
-                      SignupScreen.routeName,
-                    ),
-                  ),
-                ),
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            SignupScreen.routeName,
+                          ),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
