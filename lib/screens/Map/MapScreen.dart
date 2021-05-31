@@ -97,7 +97,7 @@ class _MapScreenState extends State<MapScreen> {
               onTap: () {
                 showDetailsModal(report);
               },
-              child: Image.asset('assets/pin.png'),
+              child: Image.asset('assets/user-report-pin.png'),
             ),
             point: l.LatLng(
               report['geolocation']['latitude'],
@@ -189,7 +189,7 @@ class _MapScreenState extends State<MapScreen> {
                             color: Color.fromRGBO(160, 160, 160, 1)),
                       ),
                       Text(
-                        "${report['reportType']}",
+                        "${report['reportType'] == 'THEFT' ? 'Furto' : 'Assalto'}",
                         style: TextStyle(
                             fontSize: 12,
                             color: Color.fromRGBO(45, 156, 219, 1)),
