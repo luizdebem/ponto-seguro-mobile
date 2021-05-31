@@ -123,16 +123,139 @@ class _MapScreenState extends State<MapScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-              'Ocorrência - ${report['userType'] == 'PEDESTRIAN' ? 'Pedestre' : 'Motorista'}'),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text(
-                  '${DateFormat.yMd().add_jm().format(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(report['when']))}',
+                  'Ocorrência',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                Text('Tipo de ocorrência: ${report['reportType']}'),
-                Text('Detalhes: ${report['details']}'),
+                SizedBox(
+                  height: 23,
+                ),
+                report['userType'] == 'DRIVER'
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Motorista",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color.fromRGBO(45, 156, 219, 1)),
+                            ),
+                            Icon(
+                              Icons.drive_eta_outlined,
+                              size: 20,
+                              color: Color.fromRGBO(45, 156, 219, 1),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Pedestre",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color.fromRGBO(45, 156, 219, 1)),
+                            ),
+                            Icon(
+                              Icons.emoji_people_outlined,
+                              size: 20,
+                              color: Color.fromRGBO(45, 156, 219, 1),
+                            )
+                          ],
+                        ),
+                      ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Crime",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(160, 160, 160, 1)),
+                      ),
+                      Text(
+                        "${report['reportType']}",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(45, 156, 219, 1)),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Localidade",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(160, 160, 160, 1)),
+                      ),
+                      Text(
+                        "Avenida Rio Branco",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(45, 156, 219, 1)),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Data e horário",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(160, 160, 160, 1)),
+                      ),
+                      Text(
+                        '${DateFormat.yMd().add_jm().format(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(report['when']))}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Color.fromRGBO(45, 156, 219, 1)),
+                      ),
+                    ],
+                  ),
+                ),
+                report['details'] != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Text(
+                              '${report['details']}',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Color.fromRGBO(45, 156, 219, 1)),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -184,8 +307,12 @@ class _MapScreenState extends State<MapScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Pedestre"),
-                                Icon(Icons.emoji_people_outlined),
+                                Text("Pedestre",
+                                    style: TextStyle(fontSize: 12)),
+                                Icon(
+                                  Icons.emoji_people_outlined,
+                                  size: 20,
+                                ),
                               ],
                             ),
                             value: 'PEDESTRIAN',
@@ -194,8 +321,9 @@ class _MapScreenState extends State<MapScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Motorista"),
-                                Icon(Icons.drive_eta_outlined),
+                                Text("Motorista",
+                                    style: TextStyle(fontSize: 12)),
+                                Icon(Icons.drive_eta_outlined, size: 20),
                               ],
                             ),
                             value: 'DRIVER',
@@ -209,6 +337,7 @@ class _MapScreenState extends State<MapScreen> {
                           fillColor: Colors.white,
                           filled: true,
                           labelText: 'Ocorrência',
+                          labelStyle: TextStyle(fontSize: 12),
                           contentPadding: EdgeInsets.symmetric(
                             vertical: 0,
                             horizontal: 12,
@@ -220,11 +349,17 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                         items: [
                           DropdownMenuItem(
-                            child: Text('Furto'),
+                            child: Text(
+                              'Furto',
+                              style: TextStyle(fontSize: 12),
+                            ),
                             value: 'THEFT',
                           ),
                           DropdownMenuItem(
-                            child: Text('Assalto'),
+                            child: Text(
+                              'Assalto',
+                              style: TextStyle(fontSize: 12),
+                            ),
                             value: 'ROBBERY',
                           ),
                         ],
@@ -233,6 +368,7 @@ class _MapScreenState extends State<MapScreen> {
                         height: 15,
                       ),
                       FormBuilderDateTimePicker(
+                        style: TextStyle(fontSize: 12),
                         name: 'when',
                         decoration: InputDecoration(
                           fillColor: Colors.white,
@@ -242,6 +378,7 @@ class _MapScreenState extends State<MapScreen> {
                             horizontal: 12,
                           ),
                           labelText: 'Data/hora',
+                          labelStyle: TextStyle(fontSize: 12),
                           border: OutlineInputBorder(),
                         ),
                       ),
@@ -249,6 +386,7 @@ class _MapScreenState extends State<MapScreen> {
                         height: 15,
                       ),
                       FormBuilderTextField(
+                        style: TextStyle(fontSize: 12),
                         name: 'details',
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
@@ -261,6 +399,7 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                           border: OutlineInputBorder(),
                           labelText: 'Detalhes (opcional)',
+                          labelStyle: TextStyle(fontSize: 12),
                         ),
                       ),
                       SizedBox(height: 12),
@@ -418,7 +557,7 @@ class _MapScreenState extends State<MapScreen> {
           ],
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
           child: Align(
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
