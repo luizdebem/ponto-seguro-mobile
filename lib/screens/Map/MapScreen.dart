@@ -127,7 +127,9 @@ class _MapScreenState extends State<MapScreen> {
         .map(
           (report) => Marker(
             builder: (ctx) => GestureDetector(
-              onTap: () {},
+              onTap: () {
+                showBusiness(report);
+              },
               child: Image.asset('assets/business-pin.png'),
             ),
             point: l.LatLng(
@@ -144,146 +146,233 @@ class _MapScreenState extends State<MapScreen> {
     return markers;
   }
 
+  Future<void> showBusiness(dynamic business) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          content: SingleChildScrollView(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // background color
+                borderRadius: BorderRadius.all(Radius.circular(6)),
+                image: DecorationImage(
+                  image: AssetImage('assets/reports-background.png'),
+                  fit: BoxFit.cover,
+                ), // background image above color
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+                child: ListBody(
+                  children: <Widget>[
+                    Text(
+                      'Selo de segurança',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: Color.fromRGBO(111, 207, 151, 1),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Image.asset(
+                      'assets/business-selo.png',
+                      height: 64,
+                      width: 64,
+                    ),
+                    SizedBox(
+                      height: 32,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Estabelecimento",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(160, 160, 160, 1)),
+                          ),
+                          Text(
+                            business['name'],
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(45, 156, 219, 1)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(),
+                    Text(business['about'], style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> showDetailsModal(dynamic report) async {
     print(jsonEncode(report['when']));
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
           content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                  'Ocorrência',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 23,
-                ),
-                report['userType'] == 'DRIVER'
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Motorista",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color.fromRGBO(45, 156, 219, 1)),
-                            ),
-                            Icon(
-                              Icons.drive_eta_outlined,
-                              size: 20,
-                              color: Color.fromRGBO(45, 156, 219, 1),
-                            ),
-                          ],
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Pedestre",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color.fromRGBO(45, 156, 219, 1)),
-                            ),
-                            Icon(
-                              Icons.emoji_people_outlined,
-                              size: 20,
-                              color: Color.fromRGBO(45, 156, 219, 1),
-                            )
-                          ],
-                        ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // background color
+                borderRadius: BorderRadius.all(Radius.circular(6)),
+                image: DecorationImage(
+                  image: AssetImage('assets/auth-bg-2.png'),
+                  fit: BoxFit.cover,
+                ), // background image above color
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+                child: ListBody(
+                  children: <Widget>[
+                    Text(
+                      'Ocorrência',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Crime",
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromRGBO(160, 160, 160, 1)),
-                      ),
-                      Text(
-                        "${report['reportType'] == 'THEFT' ? 'Furto' : 'Assalto'}",
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromRGBO(45, 156, 219, 1)),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Localidade",
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromRGBO(160, 160, 160, 1)),
-                      ),
-                      Text(
-                        "Avenida Rio Branco",
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromRGBO(45, 156, 219, 1)),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Data e horário",
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromRGBO(160, 160, 160, 1)),
-                      ),
-                      Text(
-                        '${DateFormat.yMd().add_jm().format(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(report['when']))}',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Color.fromRGBO(45, 156, 219, 1)),
-                      ),
-                    ],
-                  ),
-                ),
-                report['details'] != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Divider(),
-                          Padding(
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: 23,
+                    ),
+                    report['userType'] == 'DRIVER'
+                        ? Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12),
-                            child: Text(
-                              '${report['details']}',
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color.fromRGBO(45, 156, 219, 1)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Motorista",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color.fromRGBO(45, 156, 219, 1)),
+                                ),
+                                Icon(
+                                  Icons.drive_eta_outlined,
+                                  size: 20,
+                                  color: Color.fromRGBO(45, 156, 219, 1),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Pedestre",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color.fromRGBO(45, 156, 219, 1)),
+                                ),
+                                Icon(
+                                  Icons.emoji_people_outlined,
+                                  size: 20,
+                                  color: Color.fromRGBO(45, 156, 219, 1),
+                                )
+                              ],
                             ),
                           ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Crime",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(160, 160, 160, 1)),
+                          ),
+                          Text(
+                            "${report['reportType'] == 'THEFT' ? 'Furto' : 'Assalto'}",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(45, 156, 219, 1)),
+                          ),
                         ],
-                      )
-                    : Container(),
-              ],
+                      ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Localidade",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(160, 160, 160, 1)),
+                          ),
+                          Text(
+                            "Avenida Rio Branco",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(45, 156, 219, 1)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Data e horário",
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(160, 160, 160, 1)),
+                          ),
+                          Text(
+                            '${DateFormat.yMd().add_jm().format(DateFormat('yyyy-MM-ddTHH:mm:ssZ').parse(report['when']))}',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(45, 156, 219, 1)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    report['details'] != null
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Divider(),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: Text(
+                                  '${report['details']}',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color.fromRGBO(45, 156, 219, 1)),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Container(),
+                  ],
+                ),
+              ),
             ),
           ),
         );
@@ -303,6 +392,7 @@ class _MapScreenState extends State<MapScreen> {
           content: Container(
             decoration: BoxDecoration(
               color: Colors.white, // background color
+              borderRadius: BorderRadius.all(Radius.circular(6)),
               image: DecorationImage(
                 image: AssetImage('assets/auth-bg-2.png'),
                 fit: BoxFit.cover,
