@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import "package:latlong/latlong.dart" as l;
 import 'package:ponto_seguro/components/BottomNavBar/BottomNavBar.dart';
 import 'package:ponto_seguro/services/AuthService.dart';
+import 'package:ponto_seguro/services/BusinessService.dart';
 import 'package:ponto_seguro/services/ReportService.dart';
 import 'package:toast/toast.dart';
 
@@ -21,6 +22,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   List reports = [];
+  List businesses = [];
   bool mapLocked = true;
 
   double userLatitude;
@@ -29,6 +31,7 @@ class _MapScreenState extends State<MapScreen> {
   initState() {
     super.initState();
     getReports();
+    getBusinesses();
     setUserLocation();
   }
 
@@ -81,6 +84,14 @@ class _MapScreenState extends State<MapScreen> {
     return await Geolocator.getCurrentPosition();
   }
 
+  getBusinesses() async {
+    final Response res = await BusinessService.listAll();
+    final data = jsonDecode(res.body);
+    setState(() {
+      businesses = data['data'];
+    });
+  }
+
   getReports() async {
     final Response res = await ReportService.listAll();
     final data = jsonDecode(res.body);
@@ -112,6 +123,22 @@ class _MapScreenState extends State<MapScreen> {
       point: l.LatLng(userLatitude, userLongitude),
     );
 
+    final businessMarkers = businesses
+        .map(
+          (report) => Marker(
+            builder: (ctx) => GestureDetector(
+              onTap: () {},
+              child: Image.asset('assets/business-pin.png'),
+            ),
+            point: l.LatLng(
+              report['geolocation']['latitude'],
+              report['geolocation']['longitude'],
+            ),
+          ),
+        )
+        .toList();
+
+    businessMarkers.forEach((businessMarker) => markers.add(businessMarker));
     markers.add(userMarker);
 
     return markers;
@@ -553,7 +580,7 @@ class _MapScreenState extends State<MapScreen> {
             ),
             MarkerLayerOptions(
               markers: markers(),
-            )
+            ),
           ],
         ),
         Padding(
